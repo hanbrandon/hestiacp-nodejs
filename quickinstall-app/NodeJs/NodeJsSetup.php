@@ -134,8 +134,18 @@ class NodeJsSetup extends BaseSetup {
 		$this->appcontext->runUser('v-add-fs-file', [$this->getDocRoot('app.conf')]);
 	}
 
+	// public function createAppDir() {
+	// 	$this->nodeJsUtils->createDir($this->nodeJsPaths->getAppDir($this->domain));
+	// }
 	public function createAppDir() {
-		$this->nodeJsUtils->createDir($this->nodeJsPaths->getAppDir($this->domain));
+	    $appDir = $this->nodeJsPaths->getAppDir($this->domain);
+	    if (!$this->nodeJsUtils->createDir($appDir)) {
+	        $errorMessage = "Error creating directory: $appDir";
+		$logFilePath = '/error.log';
+
+	        error_log($errorMessage, 3, $_SERVER['DOCUMENT_ROOT'] . $logFilePath);
+	        // Optionally, you can throw an exception or handle the error in some other way.
+	    }
 	}
 
 	public function createConfDir() {
