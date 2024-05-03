@@ -139,19 +139,36 @@ class NodeJsSetup extends BaseSetup {
 	// }
 	public function createAppDir() {
 	    $appDir = $this->nodeJsPaths->getAppDir($this->domain);
-	    if (!$this->nodeJsUtils->createDir($appDir)) {
+	    if ($this->nodeJsUtils->createDir($appDir)) {
+	        // Log successful creation
+	        $successMessage = "Directory created successfully: $appDir";
+	        error_log($successMessage, 3, $_SERVER['DOCUMENT_ROOT'] . '/success.log');
+	    } else {
+	        // Log failure
 	        $errorMessage = "Error creating directory: $appDir";
-		$logFilePath = '/error.log';
-
-	        error_log($errorMessage, 3, $_SERVER['DOCUMENT_ROOT'] . $logFilePath);
-	        // Optionally, you can throw an exception or handle the error in some other way.
+	        error_log($errorMessage, 3, $_SERVER['DOCUMENT_ROOT'] . '/error.log');
 	    }
 	}
 
+
 	public function createConfDir() {
-		$this->nodeJsUtils->createDir($this->nodeJsPaths->getConfigDir());
-		$this->nodeJsUtils->createDir($this->nodeJsPaths->getConfigDir('/web'));
-		$this->nodeJsUtils->createDir($this->nodeJsPaths->getDomainConfigDir($this->domain));
+	    $configDirs = [
+	        $this->nodeJsPaths->getConfigDir(),
+	        $this->nodeJsPaths->getConfigDir('/web'),
+	        $this->nodeJsPaths->getDomainConfigDir($this->domain)
+	    ];
+	
+	    foreach ($configDirs as $dir) {
+	        if ($this->nodeJsUtils->createDir($dir)) {
+	            // Log successful creation
+	            $successMessage = "Directory created successfully: $dir";
+	            error_log($successMessage, 3, $_SERVER['DOCUMENT_ROOT'] . '/success.log');
+	        } else {
+	            // Log failure
+	            $errorMessage = "Error creating directory: $dir";
+	            error_log($errorMessage, 3, $_SERVER['DOCUMENT_ROOT'] . '/error.log');
+	        }
+	    }
 	}
 
 	public function pm2StartApp() {
