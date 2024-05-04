@@ -26,7 +26,7 @@ class NodeJsSetup extends BaseSetup {
         'form' => [
             'node_version' => [ 
                 'type' => 'select',
-                'options' => ['v22.1.0', 'v20.10.0', 'v18.18.2', 'v16.20.2'],
+                'options' => ['v22.1.0', 'v20.10.0', 'v18.18.2', 'v16.20.2', 'v16.19.0'],
             ],
             'start_script' => ['type'=>'text', 'placeholder'=>'npm run start'],
             'port' => ['type' => 'text', 'placeholder' => '3000'],
